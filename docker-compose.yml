@@ -1,0 +1,39 @@
+version: '3'
+services:
+  api:
+    build: .
+    depends_on:
+      - postgres
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env
+    # environment:
+    #   - DATABASE_HOSTNAME=postgres
+    #   - DATABASE_PORT=5432
+    #   - DATABASE_PASSWORD=anaANA24
+    #   - DATABASE_NAME=fastapi
+    #   - DATABASE_USERNAME=postgres
+    #   - SECRET_KEY="aiog1oiru32iur1jji1ng8392hth12938t31825urfn1ni4913jt41t1jfi10"
+    #   - ALGORITHM="HS256"
+    #   - ACCESS_TOKEN_EXPIRE_MINUTES=60
+  
+  postgres:
+    image: postgres:16.2
+    environment:
+      - POSTGRES_PASSWORD=anaANA24
+      - POSTGRES_DB=fastapi
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  alembic:
+    build: .
+    depends_on:
+      - postgres
+    env_file:
+      - ./.env
+
+    command: alembic upgrade head
+
+volumes:
+  postgres-data:
