@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel, EmailStr
+from pydantic import ConfigDict, BaseModel, EmailStr
 from datetime import datetime
 
 # Request Schema
@@ -19,9 +19,7 @@ class UserOut(BaseModel):
     id: int
     email: EmailStr
     created_at: datetime
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # Response Schema
 
@@ -31,23 +29,18 @@ class Post(PostBase):
     id: int
     created_at: datetime
     owner: UserOut
-
-    class Config:
-        orm_mode = True  # for pydantic to accept orm types
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PostOut(BaseModel):
     Post: Post
     votes: int
-
-    class Config:
-        orm_mode = True  # for pydantic to accept orm types
+    model_config = ConfigDict(from_attributes=True)
 
 
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
-    phone_number: str
 
 
 class UserLogin(BaseModel):

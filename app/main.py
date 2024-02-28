@@ -1,8 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from . import models
-from .database import engine  # connect_db_driver
 from .routers import post, user, auth, vote
 from .config import settings
 
