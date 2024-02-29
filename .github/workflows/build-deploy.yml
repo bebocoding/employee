@@ -27,11 +27,9 @@ jobs:
                 ports:
                     - 5432:5432
                 env:
+                    POSTGRES_DB: ${{secrets.DATABASE_DATABASE_NAME}}_test
                     POSTGRES_USER: ${{secrets.DATABASE_USERNAME}}
                     POSTGRES_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
-                    POSTGRES_DB: ${{secrets.DATABASE_DATABASE_NAME}}_test
-                volumes:
-                    - postgres-data:/var/lib/postgresql/data
                 # Set health checks to wait until postgres has started
                 options: >-
                     --health-cmd pg_isready
@@ -42,8 +40,12 @@ jobs:
         
         runs-on: ubuntu-latest
         steps:
-            - name: sign in as postgres
-              run: su - postgres
+            - name: Wait for PostgreSQL to be ready
+              run: dockerize -wait tcp://localhost:5432 -timeout 1m
+            - name: Run PostgreSQL commands
+              run: |
+                # Example: create a database
+                psql -h localhost -U ${{secrets.DATABASE_USERNAME}} -d ${{secrets.DATABASE_NAME}}_test
             - name: pulling git repo
               uses: actions/checkout@v4
             - name: install python version 3.12
