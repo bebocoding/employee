@@ -21,25 +21,29 @@ jobs:
             SECRET_KEY: ${{secrets.SECRET_KEY}}
             ALGORITHM: ${{secrets.ALGORITHM}}
             ACCESS_TOKEN_EXPIRE_MINUTES: ${{secrets.ACCESS_TOKEN_EXPIRE_MINUTES}}
-        services:
+        services:            
             postgres:
                 image: postgres
-                
                 ports:
                     - 5432:5432
                 env:
                     POSTGRES_USER: ${{secrets.DATABASE_USERNAME}}
                     POSTGRES_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
                     POSTGRES_DB: ${{secrets.DATABASE_DATABASE_NAME}}_test
+                volumes:
+                    - postgres-data:/var/lib/postgresql/data
                 # Set health checks to wait until postgres has started
                 options: >-
                     --health-cmd pg_isready
                     --health-interval 10s
                     --health-timeout 5s
                     --health-retries 5
-                
+
+        
         runs-on: ubuntu-latest
         steps:
+            - name: removing existing data volumes
+              run: docker volume rm postgres-data || true
             - name: pulling git repo
               uses: actions/checkout@v4
             - name: install python version 3.12
@@ -53,4 +57,4 @@ jobs:
             - name: test with pytest
               run: |
                 pip install pytest
-                pytest
+                pytest   
