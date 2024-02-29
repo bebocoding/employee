@@ -43,7 +43,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: removing existing data volumes
-              run: docker volume rm postgres-data || true
+              run: docker-compose rm -fv
             - name: pulling git repo
               uses: actions/checkout@v4
             - name: install python version 3.12
