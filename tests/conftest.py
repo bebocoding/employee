@@ -12,7 +12,7 @@ from app import models
 
 
 SQLALCHEMY_DATABASE_URL = (
-    f'postgresql://{settings.database_username}:{settings.database_password}@{settings.database_host}:{settings.database_port}/{settings.database_name}')
+    f'postgresql://{settings.database_username}:{settings.database_password}@{settings.database_host}:{settings.database_port}/{settings.database_name}_test')
 # '<DBMS-name>://<username>:<password>@<ip-address/hostname>:<port>/<database-name>'
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)

@@ -16,7 +16,7 @@ jobs:
             DATABASE_HOST: ${{secrets.DATABASE_HOST}}
             DATABASE_PORT: ${{secrets.DATABASE_PORT}}
             DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
-            DATABASE_NAME: postgres
+            DATABASE_NAME: ${{secrets.DATABASE_NAME}}
             DATABASE_USERNAME: ${{secrets.DATABASE_USERNAME}}
             SECRET_KEY: ${{secrets.SECRET_KEY}}
             ALGORITHM: ${{secrets.ALGORITHM}}
@@ -28,7 +28,9 @@ jobs:
                 ports:
                     - 5432:5432
                 env:
+                    POSTGRES_USER: ${{secrets.DATABASE_USERNAME}}
                     POSTGRES_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+                    POSTGRES_DB: ${{secrets.DATABASE_DATABASE_NAME}}_test
                 # Set health checks to wait until postgres has started
                 options: >-
                     --health-cmd pg_isready
