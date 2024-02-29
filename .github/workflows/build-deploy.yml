@@ -44,7 +44,7 @@ jobs:
               run: |
                 export PGPASSWORD=anaANA24
 
-                psql -h localhost -U ${{secrets.DATABASE_USERNAME}} -d ${{secrets.DATABASE_NAME}}_test -c
+                psql -h localhost -U ${{secrets.DATABASE_USERNAME}} -d ${{secrets.DATABASE_NAME}}_test
             - name: pulling git repo
               uses: actions/checkout@v4
             - name: install python version 3.12
