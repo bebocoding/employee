@@ -6,8 +6,7 @@ from time import sleep
 from .config import settings
 
 
-SQLALCHEMY_DATABASE_URL = f'postgresql://{settings.database_username}:{settings.database_password}@{
-    settings.database_host}:{settings.database_port}/{settings.database_name}'
+SQLALCHEMY_DATABASE_URL = "postgres://bebo:YfEzm6rG60JZVREXj3EnCDbuayu0uMsr@dpg-con9inocmk4c73a1g1u0-a.oregon-postgres.render.com/bebo"
 # '<DBMS-name>://<username>:<password>@<ip-address/hostname>:<port>/<database-name>'
 
 
