@@ -33,25 +33,26 @@ def create_access_token(data: dict):
 
 
 def verify_access_token(token: str, credentials_exception):
-
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        id: str = payload.get("user_id")
+        employee_id: str = payload.get("employee_id")
 
-        if id is None:
+
+        if employee_id is None:
             raise credentials_exception
-        token_data = schemas.TokenData(id=id)
+        token_data = schemas.TokenData(employee_id=employee_id)
     except JWTError:
         raise credentials_exception
     return token_data
 
 
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(database.get_db)):
+def get_current_employee(token: str = Depends(oauth2_scheme), db: Session = Depends(database.get_db)):
     credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                           detail="Could not validate credentials",
                                           headers={"WWW-Authenticate": "Bearer"})
 
     token = verify_access_token(token, credentials_exception)
-    user = db.query(models.User).filter(models.User.id == token.id).first()
+    user = db.query(models.Employee).filter(
+        models.Employee.employee_id == token.employee_id).first()
 
     return user

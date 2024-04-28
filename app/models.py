@@ -1,40 +1,29 @@
-from .database import Base
-from sqlalchemy import TIMESTAMP, Column, Integer, String, Boolean, text, ForeignKey
+import uuid
+from .database import Base, engine
+from sqlalchemy import TIMESTAMP, Column, Float, Integer, String, Boolean, text, ForeignKey, UUID
 from sqlalchemy.orm import relationship
 
 
-class Post(Base):
-    __tablename__ = "posts"
+class EmployeeLocation(Base):
+    __tablename__ = "EmployeeLocations"
 
-    id = Column(Integer, primary_key=True, nullable=False)
-    title = Column(String, nullable=False)
-    content = Column(String, nullable=False)
-    published = Column(Boolean, server_default='True', nullable=False)
-    created_at = Column(TIMESTAMP(timezone=True), nullable=False,
-                        server_default=text('now()'))
-    owner_id = Column(Integer, ForeignKey(
-        "users.id", ondelete="CASCADE"), nullable=False)
+    location_id = Column(UUID(as_uuid=True), primary_key=True,
+                         nullable=False, default=uuid.uuid4)
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
+    image_path = Column(String)
+    timestamp = Column(TIMESTAMP(timezone=True), nullable=False,
+                       server_default=text('now()'))
+    employee_id = Column(UUID, ForeignKey(
+        "Employees.employee_id", ondelete="CASCADE"), nullable=False)
 
-    owner = relationship("User", back_populates="posts")
 
-
-class User(Base):
-    __tablename__ = "users"
-
-    id = Column(Integer, primary_key=True, nullable=False)
-    email = Column(String, nullable=False, unique=True)
+class Employee(Base):
+    __tablename__ = "Employees"
+    employee_id = Column(UUID(as_uuid=True), primary_key=True,
+                         nullable=False, default=uuid.uuid4)
+    name = Column(String, nullable=False)
+    department = Column(String, nullable=False)
+    position = Column(String, nullable=False)
+    username = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
-    created_at = Column(TIMESTAMP(timezone=True), nullable=False,
-                        server_default=text('now()'))
-    phone_number = Column(String)
-
-    posts = relationship("Post", back_populates="owner")
-
-
-class Vote(Base):
-    __tablename__ = "votes"
-
-    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"),
-                     nullable=False, primary_key=True)
-    post_id = Column(Integer, ForeignKey("posts.id", ondelete="CASCADE"),
-                     nullable=False, primary_key=True)

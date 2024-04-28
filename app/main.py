@@ -1,10 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routers import post, user, auth, vote
+from .routers import auth, Employee
+from . import models
 
 
-# models.Base.metadata.create_all(bind=engine) # no need for table creating after alembic :D
+# no need for table creating after alembic :D
+models.Base.metadata.create_all(bind=models.engine)
 
 app = FastAPI()
 
@@ -17,13 +19,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-app.include_router(post.router)
-app.include_router(user.router)
+app.include_router(Employee.router)
 app.include_router(auth.router)
-app.include_router(vote.router)
 
 
 @app.get("/")
 def root():
-    return {"message": "Hello world"}
+    return {"message": "Hello employee"}
